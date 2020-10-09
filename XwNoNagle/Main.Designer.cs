@@ -28,22 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listViewInterfaces = new System.Windows.Forms.ListView();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // listView1
+            // listViewInterfaces
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewInterfaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.GridLines = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 32);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(776, 406);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listViewInterfaces.GridLines = true;
+            this.listViewInterfaces.HideSelection = false;
+            this.listViewInterfaces.Location = new System.Drawing.Point(12, 32);
+            this.listViewInterfaces.Name = "listViewInterfaces";
+            this.listViewInterfaces.Size = new System.Drawing.Size(776, 406);
+            this.listViewInterfaces.TabIndex = 0;
+            this.listViewInterfaces.UseCompatibleStateImageBehavior = false;
+            this.listViewInterfaces.View = System.Windows.Forms.View.Details;
             // 
             // label1
             // 
@@ -62,12 +63,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.listViewInterfaces);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "XwNoNagle";
+            this.Load += new System.EventHandler(this.Main_Load);
+            this.Resize += new System.EventHandler(this.Main_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -75,7 +78,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewInterfaces;
         private System.Windows.Forms.Label label1;
     }
 }
