@@ -14,7 +14,7 @@ There are two main cases where people sugest disabling it:
 
 - Gamers, who say latency is improved on online gaming... i'm not a gamer, i will not comment on the reality of this
 
-In any case, this is just a small tool to avoid editing the 
+In any case, this is just a small tool to avoid editing the registry manually
 
 ![Connection Manager](images/window.png)
 
