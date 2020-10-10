@@ -12,7 +12,7 @@ There are two main cases where people sugest disabling it:
 
 - Datacenter iSCSI Storage manufactorer (Dell) suggests (at this date) to disable this for some of its storage products
 
-- Gamers, that say latency is improved on online gaming... i'm not a gamer, i will not comment on the reality of this
+- Gamers, who say latency is improved on online gaming... i'm not a gamer, i will not comment on the reality of this
 
 In any case, this is just a small tool to avoid editing the 
 
