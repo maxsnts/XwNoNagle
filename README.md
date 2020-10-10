@@ -4,7 +4,7 @@ What is Nagle?
 Well, it is a way to make less network packets jump around on a network  
 More info where: https://en.wikipedia.org/wiki/Nagle%27s_algorithm
 
-The problem is that it sometimes is better to disable it... and there is no good way apart from editing the registry  
+The problem is that sometimes is better to disable it... and there is no good way apart from editing the registry  
 Done by hand is a pain, so this is a case of "if you want something done..."
 
 But why disable nagle?  
