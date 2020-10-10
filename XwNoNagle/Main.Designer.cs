@@ -41,12 +41,13 @@
             this.listViewInterfaces.GridLines = true;
             this.listViewInterfaces.HideSelection = false;
             this.listViewInterfaces.Location = new System.Drawing.Point(12, 32);
+            this.listViewInterfaces.MultiSelect = false;
             this.listViewInterfaces.Name = "listViewInterfaces";
             this.listViewInterfaces.Size = new System.Drawing.Size(776, 406);
             this.listViewInterfaces.TabIndex = 0;
             this.listViewInterfaces.UseCompatibleStateImageBehavior = false;
             this.listViewInterfaces.View = System.Windows.Forms.View.Details;
-            this.listViewInterfaces.SelectedIndexChanged += new System.EventHandler(this.listViewInterfaces_SelectedIndexChanged);
+            this.listViewInterfaces.DoubleClick += new System.EventHandler(this.listViewInterfaces_DoubleClick);
             // 
             // label1
             // 

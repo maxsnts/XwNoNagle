@@ -43,32 +43,58 @@ namespace XwNoNagle
         //*************************************************************************************************************
         private void LoadInterfaces()
         {
-            RegistryKey keyInterface = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces");
-            foreach (var interf in keyInterface.GetSubKeyNames())
+            using (RegistryKey keyInterface = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces"))
             {
-                string UID = interf;
-
-                RegistryKey keyService = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards");
-                foreach (var serv in keyService.GetSubKeyNames())
+                foreach (var interfaceKeyName in keyInterface.GetSubKeyNames())
                 {
-                    RegistryKey subService = keyService.OpenSubKey(serv);
-                    string ServiceName = subService.GetValue("ServiceName").ToString();
-                    if (ServiceName.ToUpper() == UID.ToUpper())
-                    { 
-                        string Description = subService.GetValue("Description").ToString();
+                    string UID = interfaceKeyName;
 
-                        RegistryKey keyName = Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\Network\{{4D36E972-E325-11CE-BFC1-08002BE10318}}\{UID}\Connection");
-                        if (keyName != null)
+                    using (RegistryKey keyService = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards"))
+                    {
+                        foreach (var serviceKeyName in keyService.GetSubKeyNames())
                         {
-                            string Name = keyName.GetValue("Name").ToString();
+                            using (RegistryKey subService = keyService.OpenSubKey(serviceKeyName))
+                            {
+                                string ServiceName = subService.GetValue("ServiceName").ToString();
+                                if (ServiceName.ToUpper() == UID.ToUpper())
+                                {
+                                    string Description = subService.GetValue("Description").ToString();
 
-                            ListViewItem item = new ListViewItem();
-                            item.Text = Name;
-                            item.Tag = false;
-                            item.SubItems.Add("");
-                            item.SubItems.Add(Description);
-                            item.SubItems.Add(UID);
-                            listViewInterfaces.Items.Add(item);
+                                    using (RegistryKey keyName = Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\Network\{{4D36E972-E325-11CE-BFC1-08002BE10318}}\{UID}\Connection"))
+                                    {
+                                        if (keyName != null)
+                                        {
+                                            string Name = keyName.GetValue("Name").ToString();
+
+                                            using (RegistryKey interfaceKey = keyInterface.OpenSubKey(interfaceKeyName))
+                                            {
+                                                var v1 = interfaceKey.GetValue("TcpAckFrequency");
+                                                var v2 = interfaceKey.GetValue("TCPNoDelay");
+
+                                                string NagleDisable = "NO";
+                                                if (v1 != null)
+                                                {
+                                                    if (v2 != null)
+                                                    {
+                                                        if (v1.ToString() == "1" && v2.ToString() == "1")
+                                                        {
+                                                            NagleDisable = "YES";
+                                                        }
+                                                    }
+                                                }
+
+                                                ListViewItem item = new ListViewItem();
+                                                item.Text = Name;
+                                                item.Tag = $@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{UID}";
+                                                item.SubItems.Add(NagleDisable);
+                                                item.SubItems.Add(Description);
+                                                item.SubItems.Add(UID);
+                                                listViewInterfaces.Items.Add(item);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -76,9 +102,40 @@ namespace XwNoNagle
         }
 
         //*************************************************************************************************************
-        private void listViewInterfaces_SelectedIndexChanged(object sender, EventArgs e)
+        private void listViewInterfaces_DoubleClick(object sender, EventArgs e)
         {
+            if (listViewInterfaces.SelectedItems.Count == 1)
+            {
+                var item = listViewInterfaces.SelectedItems[0];
+                string active = item.SubItems[1].Text;
 
+                using (RegistryKey interfaceKey = Registry.LocalMachine.OpenSubKey(item.Tag.ToString(), true))
+                {
+                    try
+                    {
+                        if (active == "YES")
+                        {
+                            interfaceKey.DeleteValue("TcpAckFrequency");
+                            interfaceKey.DeleteValue("TCPNoDelay");
+                            item.SubItems[1].Text = "NO";
+                        }
+                        else
+                        {
+                            interfaceKey.SetValue("TcpAckFrequency", 1);
+                            interfaceKey.SetValue("TCPNoDelay", 1);
+                            item.SubItems[1].Text = "YES";
+                        }
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        MessageBox.Show("To make changes, run XwNoNagle as Administrator");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
         }
     }
 }
