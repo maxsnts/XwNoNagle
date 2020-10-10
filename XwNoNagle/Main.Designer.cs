@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.listViewInterfaces = new System.Windows.Forms.ListView();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -45,6 +46,7 @@
             this.listViewInterfaces.TabIndex = 0;
             this.listViewInterfaces.UseCompatibleStateImageBehavior = false;
             this.listViewInterfaces.View = System.Windows.Forms.View.Details;
+            this.listViewInterfaces.SelectedIndexChanged += new System.EventHandler(this.listViewInterfaces_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -52,10 +54,10 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(565, 13);
+            this.label1.Size = new System.Drawing.Size(582, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Enable or disable Nagle by double click the interface, then reboot your PC. (Use " +
-    "at your own risk!)";
+            this.label1.Text = "Enable or disable Nagle by double clicking the interface, then reboot your PC. (U" +
+    "se at your own risk!)";
             // 
             // Main
             // 
@@ -64,6 +66,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listViewInterfaces);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Main";

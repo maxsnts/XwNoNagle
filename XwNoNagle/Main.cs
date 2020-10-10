@@ -21,6 +21,7 @@ namespace XwNoNagle
             listViewInterfaces.FullRowSelect = true;
             listViewInterfaces.Columns.Add("Interface");
             listViewInterfaces.Columns.Add("Nagle disabled");
+            listViewInterfaces.Columns.Add("Interface Card");
             listViewInterfaces.Columns.Add("Interface Uid");
             Main_Resize(sender, e);
             LoadInterfaces();
@@ -42,41 +43,72 @@ namespace XwNoNagle
         //*************************************************************************************************************
         private void LoadInterfaces()
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces");
-            foreach (var interf in key.GetSubKeyNames())
+            RegistryKey keyInterface = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces");
+            foreach (var interf in keyInterface.GetSubKeyNames())
             {
                 string UID = interf;
-                /*
-RegistryKey productKey = key.OpenSubKey(v);
-if (productKey != null)
-{
-    foreach (var value in productKey.GetValueNames())
+
+                RegistryKey keyService = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards");
+                foreach (var serv in keyService.GetSubKeyNames())
+                {
+                    RegistryKey subService = keyService.OpenSubKey(serv);
+                    string ServiceName = subService.GetValue("ServiceName").ToString();
+                    if (ServiceName.ToUpper() == UID.ToUpper())
+                    { 
+                        string Description = subService.GetValue("Description").ToString();
+
+                        RegistryKey keyName = Registry.LocalMachine.OpenSubKey($@"SYSTEM\ControlSet001\Control\Network\{{4D36E972-E325-11CE-BFC1-08002BE10318}}\{UID}\Connection");
+                        if (keyName != null)
+                        {
+                            string Name = keyName.GetValue("Name").ToString();
+
+                            ListViewItem item = new ListViewItem();
+                            item.Text = Name;
+                            item.Tag = false;
+                            item.SubItems.Add("");
+                            item.SubItems.Add(Description);
+                            item.SubItems.Add(UID);
+                            listViewInterfaces.Items.Add(item);
+                        }
+                    }
+                }
+
+                    
+
+                
+
+                    /*
+    RegistryKey productKey = key.OpenSubKey(v);
+    if (productKey != null)
     {
-        Console.WriteLine("\tValue:" + value);
+        foreach (var value in productKey.GetValueNames())
+        {
+            Console.WriteLine("\tValue:" + value);
 
-        // Check for the publisher to ensure it's our product
-        string keyValue = Convert.ToString(productKey.GetValue("Publisher"));
-        if (!keyValue.Equals("MyPublisherCompanyName", StringComparison.OrdinalIgnoreCase))
-            continue;
+            // Check for the publisher to ensure it's our product
+            string keyValue = Convert.ToString(productKey.GetValue("Publisher"));
+            if (!keyValue.Equals("MyPublisherCompanyName", StringComparison.OrdinalIgnoreCase))
+                continue;
 
-        string productName = Convert.ToString(productKey.GetValue("DisplayName"));
-        if (!productName.Equals("MyProductName", StringComparison.OrdinalIgnoreCase))
-            return;
+            string productName = Convert.ToString(productKey.GetValue("DisplayName"));
+            if (!productName.Equals("MyProductName", StringComparison.OrdinalIgnoreCase))
+                return;
 
-        string uninstallPath = Convert.ToString(productKey.GetValue("InstallSource"));
+            string uninstallPath = Convert.ToString(productKey.GetValue("InstallSource"));
 
-        // Do something with this valuable information
+            // Do something with this valuable information
+        }
     }
-}
-*/
+    */
 
-                ListViewItem item = new ListViewItem();
-                item.Text = "";
-                item.Tag = false;
-                item.SubItems.Add("");
-                item.SubItems.Add(UID);
-                listViewInterfaces.Items.Add(item);
+        
             }
+        }
+
+        //*************************************************************************************************************
+        private void listViewInterfaces_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
